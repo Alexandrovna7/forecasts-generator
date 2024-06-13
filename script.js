@@ -14,40 +14,59 @@
 
 /* Для добавления предсказания в список воспользуйся шаблоном forecast-item */
 
-const sendButton = document.querySelector('forecast-btn');
-const generatorContainer = document.querySelector('.current-forecast h1');
-const percentContainer = document.querySelector('.current-forecast p');
 
-sendButton.addEventListener('click', function(min, max) {
-    return Math.round(Math.randoom() * (max-min)) + min;
+const forecastBtn = document.querySelector('.forecast-btn');
+const currentForecastTitle = document.querySelector('.current-forecast h1');
+const currentForecastProbability = document.querySelector('.current-forecast p');
 
-    let predictionNumber = 1; 
-    let predictionText = "Ваши надежды и планы сбудутся сверх всяких ожиданий.";
+const forecastsContainer = document.querySelector('.forecasts');
+const forecastTemplate = document.querySelector('#forecast-item');
 
-    let predictionNumber = 2; 
-    let predictionText = "Вам пора отдохнуть.";
+forecastBtn.addEventListener('click', function() {
+    addForecastToList();
+    generateNewForecast();
+})
 
-    let predictionNumber = 3; 
-    let predictionText = "Вам предлагается мечта всей жизни. Скажите да!";
+function getRandomValue(min, max) {
+    return min + Math.floor(Math.random() * (max - min))
+    }
 
-    let predictionNumber = 4; 
-    let predictionText = "Вас ждет приятный сюрприз.";
+    function generateForecastText(num) {
+        switch(num) {
+        case 0:
+        case 7:
+        return "Все будет хорошо!";
+        case 1:
+        case 4:
+        return "Тебя ждет просто умопомрачительный день!";
+        case 2:
+        case 5:
+        return "Скоро будет прибавка в зарплате";
+        case 3:
+        case 6:
+        return "Сегодня вечером тебя ожидает приятный сюрприз";
+        case 8:
+        case 9:
+        return "Ты найдешь вещь, которую теряла";
+        default:
+        return "Тебе точно зачтут этот модуль на курсе";
+        }
+        }
 
-    let predictionNumber = 5; 
-    let predictionText = "Готовьтесь к романтическим приключениям.";
-
-
-    if (predictionNumber == 1) {
-        predictionText = "Ваши надежды и планы сбудутся сверх всяких ожиданий.";
-    } else if (predictionNumber == 2) {
-        predictionText = "Вам пора отдохнуть.";
-    } else if (predictionNumber == 3) {
-        predictionText = "Вам предлагается мечта всей жизни. Скажите да!";
-    } else if (predictionNumber == 4) {
-        predictionText = "Вас ждет приятный сюрприз.";
-    } else if (predictionNumber == 5) {
-        predictionText = "Готовьтесь к романтическим приключениям.";
-    } 
-}); 
-
-forecast-item.prepand('.forecasts');
+    function generateNewForecast() {
+        const randomValue = getRandomValue(0, 10);
+        const randomProbablity = getRandomValue(0, 101);
+        currentForecastTitle.textContent = generateForecastText(randomValue)
+        currentForecastProbability.textContent = `Вероятность: ${randomProbablity}%`
+}
+    function addForecastToList() {
+        const title = currentForecastTitle.textContent;
+        const probability = currentForecastProbability.textContent;
+        if (!title || !probability) {
+            return;
+        }
+        const forecastToAdd = forecastTemplate.content.cloneNode(true);
+        forecastToAdd.querySelector('h3').textContent = title;
+        forecastToAdd.querySelector('p').textContent = probability;
+        forecastsContainer.prepend(forecastToAdd);
+}
